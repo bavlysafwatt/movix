@@ -12,6 +12,15 @@ import 'features/home/data/repositories/home_repository_impl.dart';
 import 'features/home/domain/repositories/home_repository.dart';
 import 'features/home/domain/usecases/get_home_sections.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
+import 'features/settings/data/datasources/settings_local_data_source.dart';
+import 'features/settings/data/datasources/settings_remote_data_source.dart';
+import 'features/settings/data/repositories/settings_repository_impl.dart';
+import 'features/settings/domain/repositories/settings_repository.dart';
+import 'features/settings/domain/usecases/get_current_user.dart';
+import 'features/settings/domain/usecases/get_region.dart';
+import 'features/settings/domain/usecases/logout.dart';
+import 'features/settings/domain/usecases/set_region.dart';
+import 'features/settings/presentation/cubit/settings_cubit.dart';
 import 'features/splash/data/datasources/splash_local_data_source.dart';
 import 'features/splash/data/datasources/splash_session_data_source.dart';
 import 'features/splash/data/repositories/splash_repository_impl.dart';
@@ -111,4 +120,16 @@ Future<void> initGetIt() async {
   getIt.registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(getIt<HomeRemoteDataSource>()));
   getIt.registerLazySingleton<GetHomeSections>(() => GetHomeSections(getIt<HomeRepository>()));
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<GetHomeSections>()));
+
+  // Settings
+  getIt.registerLazySingleton<SettingsRemoteDataSource>(() => SettingsRemoteDataSourceImpl(getIt<SupabaseClient>()));
+  getIt.registerLazySingleton<SettingsLocalDataSource>(() => const SettingsLocalDataSourceImpl());
+  getIt.registerLazySingleton<SettingsRepository>(() => SettingsRepositoryImpl(getIt<SettingsRemoteDataSource>(), getIt<SettingsLocalDataSource>()));
+  getIt.registerLazySingleton<GetCurrentUser>(() => GetCurrentUser(getIt<SettingsRepository>()));
+  getIt.registerLazySingleton<GetRegion>(() => GetRegion(getIt<SettingsRepository>()));
+  getIt.registerLazySingleton<SetRegion>(() => SetRegion(getIt<SettingsRepository>()));
+  getIt.registerLazySingleton<Logout>(() => Logout(getIt<SettingsRepository>()));
+  getIt.registerFactory<SettingsCubit>(() => SettingsCubit(
+    getIt<GetCurrentUser>(), getIt<GetRegion>(), getIt<SetRegion>(), getIt<Logout>(),
+  ));
 }
