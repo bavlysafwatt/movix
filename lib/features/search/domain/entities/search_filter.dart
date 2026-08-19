@@ -1,0 +1,1 @@
+enum SearchFilter { all, movie, tv }

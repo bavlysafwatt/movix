@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:movix/features/search/data/datasources/search_remote_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/api/api_consumer.dart';
@@ -12,6 +13,12 @@ import 'features/home/data/repositories/home_repository_impl.dart';
 import 'features/home/domain/repositories/home_repository.dart';
 import 'features/home/domain/usecases/get_home_sections.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
+import 'features/search/data/datasources/search_local_data_source.dart';
+import 'features/search/data/repositories/search_repository_impl.dart';
+import 'features/search/domain/repositories/search_repository.dart';
+import 'features/search/domain/usecases/recent_searches.dart';
+import 'features/search/domain/usecases/search_movies.dart';
+import 'features/search/presentation/cubit/search_cubit.dart';
 import 'features/settings/data/datasources/settings_local_data_source.dart';
 import 'features/settings/data/datasources/settings_remote_data_source.dart';
 import 'features/settings/data/repositories/settings_repository_impl.dart';
@@ -131,5 +138,17 @@ Future<void> initGetIt() async {
   getIt.registerLazySingleton<Logout>(() => Logout(getIt<SettingsRepository>()));
   getIt.registerFactory<SettingsCubit>(() => SettingsCubit(
     getIt<GetCurrentUser>(), getIt<GetRegion>(), getIt<SetRegion>(), getIt<Logout>(),
+  ));
+
+  // Search
+  getIt.registerLazySingleton<SearchRemoteDataSource>(() => SearchRemoteDataSourceImpl(getIt<ApiConsumer>()));
+  getIt.registerLazySingleton<SearchLocalDataSource>(() => const SearchLocalDataSourceImpl());
+  getIt.registerLazySingleton<SearchRepository>(() => SearchRepositoryImpl(getIt<SearchRemoteDataSource>(), getIt<SearchLocalDataSource>()));
+  getIt.registerLazySingleton<SearchMovies>(() => SearchMovies(getIt<SearchRepository>()));
+  getIt.registerLazySingleton<GetRecentSearches>(() => GetRecentSearches(getIt<SearchRepository>()));
+  getIt.registerLazySingleton<SaveRecentSearch>(() => SaveRecentSearch(getIt<SearchRepository>()));
+  getIt.registerLazySingleton<ClearRecentSearches>(() => ClearRecentSearches(getIt<SearchRepository>()));
+  getIt.registerFactory<SearchCubit>(() => SearchCubit(
+    getIt<SearchMovies>(), getIt<GetRecentSearches>(), getIt<SaveRecentSearch>(), getIt<ClearRecentSearches>(),
   ));
 }

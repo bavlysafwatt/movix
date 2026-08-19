@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:movix/features/auth/presentation/screens/login_screen.dart';
 import 'package:movix/features/home/presentation/screens/home_screen.dart';
 import 'package:movix/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:movix/features/search/presentation/screens/search_screen.dart';
 import 'package:movix/features/settings/presentation/screens/settings_screen.dart';
 import 'package:movix/features/splash/presentation/pages/splash_screen.dart';
 
@@ -31,7 +32,7 @@ class AppRouter {
         branches: [
           StatefulShellBranch(routes: [GoRoute(path: Routes.home, builder: (_, __) => const HomeScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: Routes.discover, builder: (_, __) => const _PendingDestinationPage(title: 'Discover'))]),
-          StatefulShellBranch(routes: [GoRoute(path: Routes.search, builder: (_, __) => const _PendingDestinationPage(title: 'Search'))]),
+          StatefulShellBranch(routes: [GoRoute(path: Routes.search, builder: (_, __) => const SearchScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: Routes.library, builder: (_, __) => const _PendingDestinationPage(title: 'Library'))]),
         ],
       ),
