@@ -21,9 +21,11 @@ class TmdbNetworkImage extends StatelessWidget {
     if (imageUrl == null) {
       return ClipRRect(
         borderRadius: radius,
-        child: Container(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          child: Icon(Icons.movie_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant),
+        child: SizedBox.expand(
+          child: Container(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            child: Icon(Icons.movie_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          ),
         ),
       );
     }
@@ -33,14 +35,18 @@ class TmdbNetworkImage extends StatelessWidget {
       child: CachedNetworkImage(
         imageUrl: imageUrl!,
         fit: fit,
+        width: double.infinity,
+        height: double.infinity,
         placeholder: (context, url) => Shimmer.fromColors(
           baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           highlightColor: Theme.of(context).colorScheme.surface,
           child: Container(color: Colors.white),
         ),
-        errorWidget: (context, url, error) => Container(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          child: Icon(Icons.broken_image_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant),
+        errorWidget: (context, url, error) => SizedBox.expand(
+          child: Container(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            child: Icon(Icons.broken_image_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          ),
         ),
       ),
     );

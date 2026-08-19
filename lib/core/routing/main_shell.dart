@@ -13,42 +13,36 @@ class MainShell extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+      bottomNavigationBar: NavigationBar(
+        height: 55,
+        backgroundColor: colorScheme.surface,
+        selectedIndex: navigationShell.currentIndex,
+        indicatorColor: colorScheme.primary.withValues(alpha: 0.1),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        onDestinationSelected: (index) => navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
         ),
-        child: NavigationBar(
-          height: 55,
-          backgroundColor: colorScheme.surface,
-          selectedIndex: navigationShell.currentIndex,
-          indicatorColor: colorScheme.primary.withValues(alpha: 0.1),
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-          onDestinationSelected: (index) => navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          ),
-          labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
-                (states) {
-              if (states.contains(WidgetState.selected)) {
-                return TextStyle(
-                  color: colorScheme.primary,
-                  fontSize: 12,
-                );
-              }
+        labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
+              (states) {
+            if (states.contains(WidgetState.selected)) {
               return TextStyle(
-                color: colorScheme.onSurfaceVariant,
+                color: colorScheme.primary,
                 fontSize: 12,
               );
-            },
-          ),
-          destinations: [
-            _navIcon(FontAwesomeIcons.house, 'Home', colorScheme),
-            _navIcon(FontAwesomeIcons.compass, 'Discover', colorScheme),
-            _navIcon(FontAwesomeIcons.magnifyingGlass, 'Search', colorScheme),
-            _navIcon(FontAwesomeIcons.bookmark, 'Library', colorScheme),
-          ],
+            }
+            return TextStyle(
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 12,
+            );
+          },
         ),
+        destinations: [
+          _navIcon(FontAwesomeIcons.house, 'Home', colorScheme),
+          _navIcon(FontAwesomeIcons.compass, 'Discover', colorScheme),
+          _navIcon(FontAwesomeIcons.magnifyingGlass, 'Search', colorScheme),
+          _navIcon(FontAwesomeIcons.bookmark, 'Library', colorScheme),
+        ],
       ),
     );
   }

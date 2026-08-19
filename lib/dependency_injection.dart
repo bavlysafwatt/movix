@@ -8,6 +8,13 @@ import 'core/api/api_consumer.dart';
 import 'core/api/app_interceptors.dart';
 import 'core/api/dio_consumer.dart';
 import 'core/theme/theme_cubit.dart';
+import 'features/discover/data/datasources/discover_remote_data_source.dart';
+import 'features/discover/data/repositories/discover_repository_impl.dart';
+import 'features/discover/domain/repositories/discover_repository.dart';
+import 'features/discover/domain/usecases/discover_movies.dart';
+import 'features/discover/domain/usecases/get_genres.dart';
+import 'features/discover/presentation/cubit/discover_cubit.dart';
+import 'features/discover/presentation/cubit/genre_cubit.dart';
 import 'features/home/data/datasources/home_remote_data_source.dart';
 import 'features/home/data/repositories/home_repository_impl.dart';
 import 'features/home/domain/repositories/home_repository.dart';
@@ -151,4 +158,12 @@ Future<void> initGetIt() async {
   getIt.registerFactory<SearchCubit>(() => SearchCubit(
     getIt<SearchMovies>(), getIt<GetRecentSearches>(), getIt<SaveRecentSearch>(), getIt<ClearRecentSearches>(),
   ));
+
+  // Discover
+  getIt.registerLazySingleton<DiscoverRemoteDataSource>(() => DiscoverRemoteDataSourceImpl(getIt<ApiConsumer>()));
+  getIt.registerLazySingleton<DiscoverRepository>(() => DiscoverRepositoryImpl(getIt<DiscoverRemoteDataSource>()));
+  getIt.registerLazySingleton<GetGenres>(() => GetGenres(getIt<DiscoverRepository>()));
+  getIt.registerLazySingleton<DiscoverMovies>(() => DiscoverMovies(getIt<DiscoverRepository>()));
+  getIt.registerFactory<GenreCubit>(() => GenreCubit(getIt<GetGenres>()));
+  getIt.registerFactory<DiscoverCubit>(() => DiscoverCubit(getIt<DiscoverMovies>()));
 }
