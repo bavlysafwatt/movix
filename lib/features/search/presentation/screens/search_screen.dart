@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movix/core/helpers/spacing.dart';
+import 'package:movix/core/routing/routes.dart';
 import 'package:movix/core/widgets/app_text_field.dart';
 import 'package:movix/core/widgets/error_view.dart';
 import 'package:movix/dependency_injection.dart';
@@ -146,7 +148,17 @@ class _SearchScreenState extends State<SearchScreen> {
                           itemCount: results.length,
                           itemBuilder: (context, index) => SearchResultCard(
                             movie: results[index],
-                            onTap: null, // wired once movie/tv details exist
+                            onTap: () {
+                              if (results[index].mediaType == 'movie') {
+                                context.push(
+                                  Routes.movieDetailsPath(results[index].id),
+                                );
+                              } else if (results[index].mediaType == 'tv') {
+                                context.push(
+                                  Routes.tvDetailsPath(results[index].id),
+                                );
+                              }
+                            },
                           ),
                         );
                       },

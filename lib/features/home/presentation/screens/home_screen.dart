@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:movix/core/helpers/spacing.dart';
+import 'package:movix/core/routing/routes.dart';
 import 'package:movix/core/widgets/error_view.dart';
 import 'package:movix/dependency_injection.dart';
 
@@ -44,14 +47,80 @@ class HomeScreen extends StatelessWidget {
                       child: ListView(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         children: [
-                          HeroCarousel(movies: sections.heroTrending),
-                          const SizedBox(height: 24),
-                          MovieSectionCarousel(title: 'Trending Now', movies: sections.trending),
-                          MovieSectionCarousel(title: 'Popular Movies', movies: sections.popular),
-                          MovieSectionCarousel(title: 'Top Rated Movies', movies: sections.topRated),
-                          MovieSectionCarousel(title: 'Upcoming Movies', movies: sections.upcoming),
-                          MovieSectionCarousel(title: 'Now Playing Movies', movies: sections.nowPlaying),
-                          MovieSectionCarousel(title: 'Popular TV Shows', movies: sections.popularTv),
+                          HeroCarousel(
+                            movies: sections.heroTrending,
+                            onMovieTap: (movie) {
+                              if (movie.mediaType == 'movie') {
+                                context.push(Routes.movieDetailsPath(movie.id));
+                              } else if (movie.mediaType == 'tv') {
+                                context.push(Routes.tvDetailsPath(movie.id));
+                              }
+                            },
+                          ),
+                          verticalSpace(24),
+
+                          MovieSectionCarousel(
+                            title: 'Trending Now',
+                            movies: sections.trending,
+                            onMovieTap: (movie) {
+                              if (movie.mediaType == 'movie') {
+                                context.push(Routes.movieDetailsPath(movie.id));
+                              } else if (movie.mediaType == 'tv') {
+                                context.push(Routes.tvDetailsPath(movie.id));
+                              }
+                            },
+                          ),
+                          MovieSectionCarousel(
+                            title: 'Popular Movies',
+                            movies: sections.popular,
+                            onMovieTap: (movie) {
+                              if (movie.mediaType == 'movie') {
+                                context.push(Routes.movieDetailsPath(movie.id));
+                              } else if (movie.mediaType == 'tv') {
+                                context.push(Routes.tvDetailsPath(movie.id));
+                              }
+                            },
+                          ),
+                          MovieSectionCarousel(
+                            title: 'Top Rated Movies',
+                            movies: sections.topRated,
+                            onMovieTap: (movie) {
+                              if (movie.mediaType == 'movie') {
+                                context.push(Routes.movieDetailsPath(movie.id));
+                              } else if (movie.mediaType == 'tv') {
+                                context.push(Routes.tvDetailsPath(movie.id));
+                              }
+                            },
+                          ),
+                          MovieSectionCarousel(
+                            title: 'Upcoming Movies',
+                            movies: sections.upcoming,
+                            onMovieTap: (movie) {
+                              if (movie.mediaType == 'movie') {
+                                context.push(Routes.movieDetailsPath(movie.id));
+                              } else if (movie.mediaType == 'tv') {
+                                context.push(Routes.tvDetailsPath(movie.id));
+                              }
+                            },
+                          ),
+                          MovieSectionCarousel(
+                            title: 'Now Playing Movies',
+                            movies: sections.nowPlaying,
+                            onMovieTap: (movie) {
+                              if (movie.mediaType == 'movie') {
+                                context.push(Routes.movieDetailsPath(movie.id));
+                              }
+                            },
+                          ),
+                          MovieSectionCarousel(
+                            title: 'Popular TV Shows',
+                            movies: sections.popularTv,
+                            onMovieTap: (movie) {
+                              if (movie.mediaType == 'tv') {
+                                context.push(Routes.tvDetailsPath(movie.id));
+                              }
+                            },
+                          ),
                         ],
                       ),
                     );

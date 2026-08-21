@@ -3,11 +3,21 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:movix/features/search/data/datasources/search_remote_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'core/api/api_consumer.dart';
 import 'core/api/app_interceptors.dart';
 import 'core/api/dio_consumer.dart';
 import 'core/theme/theme_cubit.dart';
+import 'features/details/data/datasources/details_remote_data_source.dart';
+import 'features/details/data/repositories/movie_details_repository_impl.dart';
+import 'features/details/domain/repositories/details_repository.dart';
+import 'features/details/domain/usecases/get_movie_details_bundle.dart';
+import 'features/details/domain/usecases/get_person_bundle.dart';
+import 'features/details/domain/usecases/get_season_details.dart';
+import 'features/details/domain/usecases/get_tv_details_bundle.dart';
+import 'features/details/presentation/cubit/movie_details_cubit.dart';
+import 'features/details/presentation/cubit/person_details_cubit.dart';
+import 'features/details/presentation/cubit/season_details_cubit.dart';
+import 'features/details/presentation/cubit/tv_details_cubit.dart';
 import 'features/discover/data/datasources/discover_remote_data_source.dart';
 import 'features/discover/data/repositories/discover_repository_impl.dart';
 import 'features/discover/domain/repositories/discover_repository.dart';
@@ -20,6 +30,14 @@ import 'features/home/data/repositories/home_repository_impl.dart';
 import 'features/home/domain/repositories/home_repository.dart';
 import 'features/home/domain/usecases/get_home_sections.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
+import 'features/library/data/datasources/library_remote_data_source.dart';
+import 'features/library/data/repositories/library_repository_impl.dart';
+import 'features/library/domain/repositories/library_repository.dart';
+import 'features/library/domain/usecases/get_library_status.dart';
+import 'features/library/domain/usecases/rate_item.dart';
+import 'features/library/domain/usecases/toggle_favorite.dart';
+import 'features/library/domain/usecases/toggle_watched.dart';
+import 'features/library/domain/usecases/toggle_watchlist.dart';
 import 'features/search/data/datasources/search_local_data_source.dart';
 import 'features/search/data/repositories/search_repository_impl.dart';
 import 'features/search/domain/repositories/search_repository.dart';
@@ -166,4 +184,36 @@ Future<void> initGetIt() async {
   getIt.registerLazySingleton<DiscoverMovies>(() => DiscoverMovies(getIt<DiscoverRepository>()));
   getIt.registerFactory<GenreCubit>(() => GenreCubit(getIt<GetGenres>()));
   getIt.registerFactory<DiscoverCubit>(() => DiscoverCubit(getIt<DiscoverMovies>()));
+
+  // Library
+  getIt.registerLazySingleton<LibraryRemoteDataSource>(() => LibraryRemoteDataSourceImpl(getIt<SupabaseClient>()));
+  getIt.registerLazySingleton<LibraryRepository>(() => LibraryRepositoryImpl(getIt<LibraryRemoteDataSource>()));
+  getIt.registerLazySingleton<GetLibraryStatus>(() => GetLibraryStatus(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<ToggleFavorite>(() => ToggleFavorite(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<ToggleWatchlist>(() => ToggleWatchlist(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<ToggleWatched>(() => ToggleWatched(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<RateItem>(() => RateItem(getIt<LibraryRepository>()));
+
+  // Movie Details
+  getIt.registerLazySingleton<DetailsRemoteDataSource>(() => DetailsRemoteDataSourceImpl(getIt<ApiConsumer>()));
+  getIt.registerLazySingleton<DetailsRepository>(() => DetailsRepositoryImpl(getIt<DetailsRemoteDataSource>()));
+  getIt.registerLazySingleton<GetMovieDetailsBundle>(() => GetMovieDetailsBundle(getIt<DetailsRepository>()));
+  getIt.registerLazySingleton<GetTvDetailsBundle>(() => GetTvDetailsBundle(getIt<DetailsRepository>()));
+  getIt.registerLazySingleton<GetSeasonDetails>(() => GetSeasonDetails(getIt<DetailsRepository>()));
+  getIt.registerLazySingleton<GetPersonBundle>(() => GetPersonBundle(getIt<DetailsRepository>()));
+  getIt.registerFactory<MovieDetailsCubit>(() => MovieDetailsCubit(
+    getIt<GetMovieDetailsBundle>(), getIt<GetRegion>(), getIt<GetLibraryStatus>(), getIt<ToggleFavorite>(),
+    getIt<ToggleWatchlist>(), getIt<ToggleWatched>(), getIt<RateItem>(),
+  ));
+  getIt.registerFactory<TvDetailsCubit>(() => TvDetailsCubit(
+    getIt<GetTvDetailsBundle>(),
+    getIt<GetLibraryStatus>(),
+    getIt<GetRegion>(),
+    getIt<ToggleFavorite>(),
+    getIt<ToggleWatchlist>(),
+    getIt<ToggleWatched>(),
+    getIt<RateItem>(),
+  ));
+  getIt.registerFactory<SeasonDetailsCubit>(() => SeasonDetailsCubit(getIt<GetSeasonDetails>()));
+  getIt.registerFactory<PersonDetailsCubit>(() => PersonDetailsCubit(getIt<GetPersonBundle>()));
 }

@@ -31,7 +31,7 @@ class GenreTile extends StatelessWidget {
             child: Text(
               genre.name,
               maxLines: 2,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16),
+              style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w800, fontSize: 16),
             ),
           ),
         ),

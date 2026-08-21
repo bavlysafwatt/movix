@@ -8,6 +8,7 @@ class EndPoints {
   static const String backdropW780 = 'w780';
   static const String backdropOriginal = 'original';
   static const String profileW185 = 'w185';
+  static const String logoW92 = 'w92';
 
   // Trending / lists
   static const String trendingAllDay = 'trending/all/day';
@@ -33,6 +34,10 @@ class EndPoints {
   static String tvVideos(int id) => 'tv/$id/videos';
   static String tvSeasonDetails(int id, int seasonNumber) =>
       'tv/$id/season/$seasonNumber';
+  static String tvSimilar(int id) => 'tv/$id/similar';
+  static String tvRecommendations(int id) => 'tv/$id/recommendations';
+  static String tvWatchProviders(int id) => 'tv/$id/watch/providers';
+
 
   // Discover / genres
   static const String discoverMovie = 'discover/movie';
@@ -49,4 +54,5 @@ class EndPoints {
   // Person
   static String personDetails(int id) => 'person/$id';
   static String personMovieCredits(int id) => 'person/$id/movie_credits';
+  static String personCombinedCredits(int id) => 'person/$id/combined_credits';
 }

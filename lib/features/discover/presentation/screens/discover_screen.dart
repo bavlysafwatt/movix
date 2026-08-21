@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movix/core/helpers/spacing.dart';
+import 'package:movix/core/routing/routes.dart';
 import 'package:movix/core/widgets/error_view.dart';
 import 'package:movix/dependency_injection.dart';
 import 'package:movix/features/discover/domain/entities/discover_filters.dart';
@@ -104,7 +106,17 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         if (index >= loaded.movies.length) {
                           return const Center(child: CircularProgressIndicator(strokeWidth: 2));
                         }
-                        return DiscoverMovieCard(movie: loaded.movies[index], onTap: null);
+                        return DiscoverMovieCard(movie: loaded.movies[index], onTap: () {
+                          if(loaded.movies[index].mediaType == 'movie') {
+                            context.push(
+                              Routes.movieDetailsPath(loaded.movies[index].id),
+                            );
+                          } else if(loaded.movies[index].mediaType == 'tv') {
+                            context.push(
+                              Routes.tvDetailsPath(loaded.movies[index].id),
+                            );
+                          }
+                        });
                       },
                     ),
                   ),

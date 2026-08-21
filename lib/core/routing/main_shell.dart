@@ -14,7 +14,7 @@ class MainShell extends StatelessWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
-        height: 55,
+        height: 65,
         backgroundColor: colorScheme.surface,
         selectedIndex: navigationShell.currentIndex,
         indicatorColor: colorScheme.primary.withValues(alpha: 0.1),

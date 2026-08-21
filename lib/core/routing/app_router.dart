@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movix/features/auth/presentation/screens/login_screen.dart';
+import 'package:movix/features/details/presentation/screens/movie_details_screen.dart';
+import 'package:movix/features/details/presentation/screens/season_details_screen.dart';
+import 'package:movix/features/details/presentation/screens/trailer_player_screen.dart';
 import 'package:movix/features/home/presentation/screens/home_screen.dart';
 import 'package:movix/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:movix/features/search/presentation/screens/search_screen.dart';
 import 'package:movix/features/settings/presentation/screens/settings_screen.dart';
 import 'package:movix/features/splash/presentation/pages/splash_screen.dart';
 
+import '../../features/details/presentation/screens/person_details_screen.dart';
+import '../../features/details/presentation/screens/tv_details_screen.dart';
 import '../../features/discover/domain/entities/discover_filters.dart';
 import '../../features/discover/domain/entities/genre.dart';
 import '../../features/discover/presentation/screens/discover_screen.dart';
@@ -31,6 +36,20 @@ class AppRouter {
         builder: (_, __) => const LoginScreen(),
       ),
       GoRoute(path: Routes.settings, builder: (_, __) => const SettingsScreen()),
+      GoRoute(
+        path: Routes.movieDetails,
+        builder: (context, state) => MovieDetailsScreen(movieId: int.parse(state.pathParameters['id']!)),
+      ),
+      GoRoute(path: Routes.tvDetails, builder: (context, state) => TvDetailsScreen(tvId: int.parse(state.pathParameters['id']!))),
+      GoRoute(path: Routes.seasonDetails, builder: (context, state) => SeasonDetailsScreen(
+        tvId: int.parse(state.pathParameters['id']!),
+        seasonNumber: int.parse(state.pathParameters['seasonNumber']!),
+      )),
+      GoRoute(path: Routes.personDetails, builder: (context, state) => PersonDetailsScreen(personId: int.parse(state.pathParameters['id']!))),
+      GoRoute(
+        path: Routes.trailer,
+        builder: (context, state) => TrailerPlayerScreen(videoId: state.pathParameters['videoId']!),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => MainShell(navigationShell: navigationShell),
         branches: [
