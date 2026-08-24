@@ -55,7 +55,7 @@ GOOGLE_IOS_CLIENT_ID=your_ios_client_id.apps.googleusercontent.com
 
 > `.env` is gitignored — never commit real keys.
 
-### 4. Run
+### 3. Run
 
 ```bash
 flutter run
