@@ -2,16 +2,15 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:movix/core/error/exceptions.dart';
 import 'package:movix/core/usecase/usecase.dart';
-
+import '../entities/library_item.dart';
 import '../repositories/library_repository.dart';
 
 class ToggleWatchedParams extends Equatable {
-  const ToggleWatchedParams({required this.tmdbId, required this.mediaType, required this.watched});
-  final int tmdbId;
-  final String mediaType;
+  const ToggleWatchedParams({required this.item, required this.watched});
+  final LibraryItem item;
   final bool watched;
   @override
-  List<Object?> get props => [tmdbId, mediaType, watched];
+  List<Object?> get props => [item.tmdbId, item.mediaType, watched];
 }
 
 class ToggleWatched implements UseCase<void, ToggleWatchedParams> {
@@ -19,5 +18,5 @@ class ToggleWatched implements UseCase<void, ToggleWatchedParams> {
   final LibraryRepository _repository;
   @override
   Future<Either<GenericException, void>> call(ToggleWatchedParams params) =>
-      _repository.toggleWatched(tmdbId: params.tmdbId, mediaType: params.mediaType, watched: params.watched);
+      _repository.toggleWatched(params.item, watched: params.watched);
 }

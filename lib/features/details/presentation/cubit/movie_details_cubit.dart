@@ -14,14 +14,14 @@ import 'movie_details_state.dart';
 
 class MovieDetailsCubit extends Cubit<MovieDetailsState> {
   MovieDetailsCubit(
-      this._getBundle,
-      this._getRegion,
-      this._getStatus,
-      this._toggleFavorite,
-      this._toggleWatchlist,
-      this._toggleWatched,
-      this._rateItem,
-      ) : super(MovieDetailsInitial());
+    this._getBundle,
+    this._getRegion,
+    this._getStatus,
+    this._toggleFavorite,
+    this._toggleWatchlist,
+    this._toggleWatched,
+    this._rateItem,
+  ) : super(MovieDetailsInitial());
 
   final GetMovieDetailsBundle _getBundle;
   final GetRegion _getRegion;
@@ -37,23 +37,29 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
     if (isClosed) return;
     final region = regionResult.getOrElse(() => 'US');
 
-    final bundleResult = await _getBundle(MovieDetailsParams(movieId: movieId, region: region));
+    final bundleResult = await _getBundle(
+      MovieDetailsParams(movieId: movieId, region: region),
+    );
     if (isClosed) return;
 
     await bundleResult.fold(
-          (error) async => emit(MovieDetailsError(message: error.message)),
-          (bundle) async {
-        final statusResult = await _getStatus(LibraryStatusParams(tmdbId: movieId, mediaType: 'movie'));
+      (error) async => emit(MovieDetailsError(message: error.message)),
+      (bundle) async {
+        final statusResult = await _getStatus(
+          LibraryStatusParams(tmdbId: movieId, mediaType: 'movie'),
+        );
         if (isClosed) return;
-        emit(MovieDetailsLoaded(
-          details: bundle.details,
-          cast: bundle.cast,
-          trailerKey: bundle.trailerKey,
-          similar: bundle.similar,
-          recommendations: bundle.recommendations,
-          watchProviders: bundle.watchProviders,
-          status: statusResult.getOrElse(() => const LibraryItemStatus()),
-        ));
+        emit(
+          MovieDetailsLoaded(
+            details: bundle.details,
+            cast: bundle.cast,
+            trailerKey: bundle.trailerKey,
+            similar: bundle.similar,
+            recommendations: bundle.recommendations,
+            watchProviders: bundle.watchProviders,
+            status: statusResult.getOrElse(() => const LibraryItemStatus()),
+          ),
+        );
       },
     );
   }
@@ -70,8 +76,14 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
     if (isClosed) return;
 
     result.fold(
-          (_) => emit(current.copyWith(status: current.status)),
-          (_) => emit(current.copyWith(status: current.status.copyWith(isFavorite: !current.status.isFavorite))),
+      (_) => emit(current.copyWith(status: current.status)),
+      (_) => emit(
+        current.copyWith(
+          status: current.status.copyWith(
+            isFavorite: !current.status.isFavorite,
+          ),
+        ),
+      ),
     );
   }
 
@@ -87,8 +99,14 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
     if (isClosed) return;
 
     result.fold(
-          (_) => emit(current.copyWith(status: current.status)),
-          (_) => emit(current.copyWith(status: current.status.copyWith(isInWatchlist: !current.status.isInWatchlist))),
+      (_) => emit(current.copyWith(status: current.status)),
+      (_) => emit(
+        current.copyWith(
+          status: current.status.copyWith(
+            isInWatchlist: !current.status.isInWatchlist,
+          ),
+        ),
+      ),
     );
   }
 
@@ -97,16 +115,21 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
     if (current is! MovieDetailsLoaded) return;
     emit(current.copyWith(status: current.status, isUpdatingWatched: true));
 
-    final result = await _toggleWatched(ToggleWatchedParams(
-      tmdbId: current.details.id,
-      mediaType: 'movie',
-      watched: !current.status.isWatched,
-    ));
+    final result = await _toggleWatched(
+      ToggleWatchedParams(
+        item: _itemFrom(current),
+        watched: !current.status.isWatched,
+      ),
+    );
     if (isClosed) return;
 
     result.fold(
-          (_) => emit(current.copyWith(status: current.status)),
-          (_) => emit(current.copyWith(status: current.status.copyWith(isWatched: !current.status.isWatched))),
+      (_) => emit(current.copyWith(status: current.status)),
+      (_) => emit(
+        current.copyWith(
+          status: current.status.copyWith(isWatched: !current.status.isWatched),
+        ),
+      ),
     );
   }
 
@@ -116,13 +139,19 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
     emit(current.copyWith(status: current.status, isSubmittingRating: true));
 
     final result = await _rateItem(
-      RateItemParams(tmdbId: current.details.id, mediaType: 'movie', rating: rating),
+      RateItemParams(
+        tmdbId: current.details.id,
+        mediaType: 'movie',
+        rating: rating,
+      ),
     );
     if (isClosed) return;
 
     result.fold(
-          (_) => emit(current.copyWith(status: current.status)),
-          (_) => emit(current.copyWith(status: current.status.copyWith(userRating: rating))),
+      (_) => emit(current.copyWith(status: current.status)),
+      (_) => emit(
+        current.copyWith(status: current.status.copyWith(userRating: rating)),
+      ),
     );
   }
 

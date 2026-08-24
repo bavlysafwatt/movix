@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:movix/core/error/exceptions.dart';
 import 'package:movix/core/utils/app_strings.dart';
+import 'package:movix/features/library/domain/entities/library_rated_item.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/entities/library_item.dart';
@@ -42,11 +43,8 @@ class LibraryRepositoryImpl implements LibraryRepository {
       _run(() => add ? _remote.addWatchlist(item) : _remote.removeWatchlist(item.tmdbId, item.mediaType));
 
   @override
-  Future<Either<GenericException, void>> toggleWatched({
-    required int tmdbId,
-    required String mediaType,
-    required bool watched,
-  }) => _run(() => watched ? _remote.markWatched(tmdbId, mediaType) : _remote.unmarkWatched(tmdbId, mediaType));
+  Future<Either<GenericException, void>> toggleWatched(LibraryItem item, {required bool watched}) =>
+      _run(() => watched ? _remote.markWatched(item) : _remote.unmarkWatched(item.tmdbId, item.mediaType));
 
   @override
   Future<Either<GenericException, void>> rateItem({
@@ -54,6 +52,18 @@ class LibraryRepositoryImpl implements LibraryRepository {
     required String mediaType,
     required double rating,
   }) => _run(() => _remote.rateItem(tmdbId, mediaType, rating));
+
+  @override
+  Future<Either<GenericException, List<LibraryItem>>> getFavorites() => _run(() => _remote.getFavorites());
+
+  @override
+  Future<Either<GenericException, List<LibraryItem>>> getWatchlist() => _run(() => _remote.getWatchlist());
+
+  @override
+  Future<Either<GenericException, List<LibraryItem>>> getWatchedHistory() => _run(() => _remote.getWatchedHistory());
+
+  @override
+  Future<Either<GenericException, List<LibraryRatedItem>>> getRatedItems() => _run(() => _remote.getRatedItems());
 
   Future<Either<GenericException, T>> _run<T>(Future<T> Function() call) async {
     try {

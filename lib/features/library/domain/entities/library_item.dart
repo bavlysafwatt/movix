@@ -1,4 +1,6 @@
-class LibraryItem {
+import 'package:equatable/equatable.dart';
+
+class LibraryItem extends Equatable {
   const LibraryItem({
     required this.tmdbId,
     required this.mediaType,
@@ -12,4 +14,7 @@ class LibraryItem {
   final String title;
   final String? posterPath;
   final String? releaseDate;
+
+  @override
+  List<Object?> get props => [tmdbId, mediaType, title, posterPath, releaseDate];
 }

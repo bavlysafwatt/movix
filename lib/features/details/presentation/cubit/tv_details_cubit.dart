@@ -91,9 +91,7 @@ class TvDetailsCubit extends Cubit<TvDetailsState> {
     if (current is! TvDetailsLoaded) return;
     emit(current.copyWith(status: current.status, isUpdatingWatched: true));
 
-    final result = await _toggleWatched(ToggleWatchedParams(
-      tmdbId: current.details.id, mediaType: 'tv', watched: !current.status.isWatched,
-    ));
+    final result = await _toggleWatched(ToggleWatchedParams(item: _itemFrom(current), watched: !current.status.isWatched));
     if (isClosed) return;
 
     result.fold(

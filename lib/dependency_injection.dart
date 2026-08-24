@@ -33,11 +33,18 @@ import 'features/home/presentation/cubit/home_cubit.dart';
 import 'features/library/data/datasources/library_remote_data_source.dart';
 import 'features/library/data/repositories/library_repository_impl.dart';
 import 'features/library/domain/repositories/library_repository.dart';
+import 'features/library/domain/usecases/get_favorites.dart';
 import 'features/library/domain/usecases/get_library_status.dart';
+import 'features/library/domain/usecases/get_rated_items.dart';
+import 'features/library/domain/usecases/get_watched_history.dart';
+import 'features/library/domain/usecases/get_watchlist.dart';
 import 'features/library/domain/usecases/rate_item.dart';
 import 'features/library/domain/usecases/toggle_favorite.dart';
 import 'features/library/domain/usecases/toggle_watched.dart';
 import 'features/library/domain/usecases/toggle_watchlist.dart';
+import 'features/library/presentation/cubit/library_items_cubit.dart';
+import 'features/library/presentation/cubit/library_list_state.dart';
+import 'features/library/presentation/cubit/ratings_cubit.dart';
 import 'features/search/data/datasources/search_local_data_source.dart';
 import 'features/search/data/repositories/search_repository_impl.dart';
 import 'features/search/domain/repositories/search_repository.dart';
@@ -193,6 +200,23 @@ Future<void> initGetIt() async {
   getIt.registerLazySingleton<ToggleWatchlist>(() => ToggleWatchlist(getIt<LibraryRepository>()));
   getIt.registerLazySingleton<ToggleWatched>(() => ToggleWatched(getIt<LibraryRepository>()));
   getIt.registerLazySingleton<RateItem>(() => RateItem(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<GetFavorites>(() => GetFavorites(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<GetWatchlist>(() => GetWatchlist(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<GetWatchedHistory>(() => GetWatchedHistory(getIt<LibraryRepository>()));
+  getIt.registerLazySingleton<GetRatedItems>(() => GetRatedItems(getIt<LibraryRepository>()));
+
+  getIt.registerFactoryParam<LibraryItemsCubit, LibraryListKind, void>(
+        (kind, _) => LibraryItemsCubit(
+      kind,
+      getIt<GetFavorites>(),
+      getIt<GetWatchlist>(),
+      getIt<GetWatchedHistory>(),
+      getIt<ToggleFavorite>(),
+      getIt<ToggleWatchlist>(),
+      getIt<ToggleWatched>(),
+    ),
+  );
+  getIt.registerFactory<RatingsCubit>(() => RatingsCubit(getIt<GetRatedItems>()));
 
   // Movie Details
   getIt.registerLazySingleton<DetailsRemoteDataSource>(() => DetailsRemoteDataSourceImpl(getIt<ApiConsumer>()));

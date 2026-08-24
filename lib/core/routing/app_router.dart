@@ -5,6 +5,7 @@ import 'package:movix/features/details/presentation/screens/movie_details_screen
 import 'package:movix/features/details/presentation/screens/season_details_screen.dart';
 import 'package:movix/features/details/presentation/screens/trailer_player_screen.dart';
 import 'package:movix/features/home/presentation/screens/home_screen.dart';
+import 'package:movix/features/library/presentation/screens/library_screen.dart';
 import 'package:movix/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:movix/features/search/presentation/screens/search_screen.dart';
 import 'package:movix/features/settings/presentation/screens/settings_screen.dart';
@@ -70,22 +71,9 @@ class AppRouter {
             ),
           ]),
           StatefulShellBranch(routes: [GoRoute(path: Routes.search, builder: (_, __) => const SearchScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: Routes.library, builder: (_, __) => const _PendingDestinationPage(title: 'Library'))]),
+          StatefulShellBranch(routes: [GoRoute(path: Routes.library, builder: (_, __) => const LibraryScreen())]),
         ],
       ),
     ],
   );
-}
-
-class _PendingDestinationPage extends StatelessWidget {
-  const _PendingDestinationPage({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('$title feature is coming next.')),
-    );
-  }
 }
