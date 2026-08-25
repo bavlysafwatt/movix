@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movix/core/usecase/usecase.dart';
 import 'package:movix/features/library/domain/entities/library_item.dart';
 import 'package:movix/features/library/domain/entities/library_item_status.dart';
+import 'package:movix/features/library/domain/entities/library_rated_item.dart';
 import 'package:movix/features/library/domain/usecases/get_library_status.dart';
 import 'package:movix/features/library/domain/usecases/rate_item.dart';
 import 'package:movix/features/library/domain/usecases/toggle_favorite.dart';
@@ -139,10 +140,13 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
     emit(current.copyWith(status: current.status, isSubmittingRating: true));
 
     final result = await _rateItem(
-      RateItemParams(
+      LibraryRatedItem(
         tmdbId: current.details.id,
         mediaType: 'movie',
         rating: rating,
+        title: current.details.title,
+        posterPath: current.details.posterPath,
+        releaseDate: current.details.releaseDate,
       ),
     );
     if (isClosed) return;

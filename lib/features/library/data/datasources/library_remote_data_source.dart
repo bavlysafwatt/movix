@@ -14,7 +14,7 @@ abstract class LibraryRemoteDataSource {
   Future<void> removeWatchlist(int tmdbId, String mediaType);
   Future<void> markWatched(LibraryItem item);
   Future<void> unmarkWatched(int tmdbId, String mediaType);
-  Future<void> rateItem(int tmdbId, String mediaType, double rating);
+  Future<void> rateItem(LibraryRatedItem item);
   Future<List<LibraryItem>> getFavorites();
   Future<List<LibraryItem>> getWatchlist();
   Future<List<LibraryItem>> getWatchedHistory();
@@ -100,8 +100,16 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
       .eq('media_type', mediaType);
 
   @override
-  Future<void> rateItem(int tmdbId, String mediaType, double rating) => _client.from('user_ratings').upsert(
-    {'user_id': _userId, 'tmdb_id': tmdbId, 'media_type': mediaType, 'rating': rating},
+  Future<void> rateItem(LibraryRatedItem item) => _client.from('user_ratings').upsert(
+    {
+      'user_id': _userId,
+      'tmdb_id': item.tmdbId,
+      'media_type': item.mediaType,
+      'rating': item.rating,
+      'title': item.title,
+      'poster_path': item.posterPath,
+      'release_date': item.releaseDate,
+    },
     onConflict: 'user_id,tmdb_id,media_type',
   );
 

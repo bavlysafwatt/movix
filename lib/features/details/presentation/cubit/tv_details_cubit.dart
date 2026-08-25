@@ -3,6 +3,7 @@ import 'package:movix/core/usecase/usecase.dart';
 import 'package:movix/features/details/domain/usecases/get_tv_details_bundle.dart';
 import 'package:movix/features/library/domain/entities/library_item.dart';
 import 'package:movix/features/library/domain/entities/library_item_status.dart';
+import 'package:movix/features/library/domain/entities/library_rated_item.dart';
 import 'package:movix/features/library/domain/usecases/get_library_status.dart';
 import 'package:movix/features/library/domain/usecases/rate_item.dart';
 import 'package:movix/features/library/domain/usecases/toggle_favorite.dart';
@@ -105,7 +106,16 @@ class TvDetailsCubit extends Cubit<TvDetailsState> {
     if (current is! TvDetailsLoaded) return;
     emit(current.copyWith(status: current.status, isSubmittingRating: true));
 
-    final result = await _rateItem(RateItemParams(tmdbId: current.details.id, mediaType: 'tv', rating: rating));
+    final result = await _rateItem(
+      LibraryRatedItem(
+        tmdbId: current.details.id,
+        mediaType: 'tv',
+        rating: rating,
+        title: current.details.name,
+        posterPath: current.details.posterPath,
+        releaseDate: current.details.firstAirDate,
+      ),
+    );
     if (isClosed) return;
 
     result.fold(

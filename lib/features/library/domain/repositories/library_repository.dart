@@ -12,11 +12,7 @@ abstract class LibraryRepository {
   Future<Either<GenericException, void>> toggleFavorite(LibraryItem item, {required bool add});
   Future<Either<GenericException, void>> toggleWatchlist(LibraryItem item, {required bool add});
   Future<Either<GenericException, void>> toggleWatched(LibraryItem item, {required bool watched});
-  Future<Either<GenericException, void>> rateItem({
-    required int tmdbId,
-    required String mediaType,
-    required double rating,
-  });
+  Future<Either<GenericException, void>> rateItem(LibraryRatedItem item);
   Future<Either<GenericException, List<LibraryItem>>> getFavorites();
   Future<Either<GenericException, List<LibraryItem>>> getWatchlist();
   Future<Either<GenericException, List<LibraryItem>>> getWatchedHistory();

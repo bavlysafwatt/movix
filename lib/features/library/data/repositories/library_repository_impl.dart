@@ -47,11 +47,7 @@ class LibraryRepositoryImpl implements LibraryRepository {
       _run(() => watched ? _remote.markWatched(item) : _remote.unmarkWatched(item.tmdbId, item.mediaType));
 
   @override
-  Future<Either<GenericException, void>> rateItem({
-    required int tmdbId,
-    required String mediaType,
-    required double rating,
-  }) => _run(() => _remote.rateItem(tmdbId, mediaType, rating));
+  Future<Either<GenericException, void>> rateItem(LibraryRatedItem item) => _run(() => _remote.rateItem(item));
 
   @override
   Future<Either<GenericException, List<LibraryItem>>> getFavorites() => _run(() => _remote.getFavorites());
